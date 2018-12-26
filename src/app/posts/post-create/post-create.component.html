@@ -1,0 +1,11 @@
+<mat-card>
+    <form (submit) = onSendClick(postForm) #postForm = "ngForm">
+        <mat-form-field>
+            <input matInput type="text" name="title" required="true" ngModel>
+        </mat-form-field>
+        <mat-form-field>
+            <textarea matInput rows="4" name="content" required="true" ngModel></textarea>
+        </mat-form-field>
+        <button mat-raised-button color="accent" type="submit">Send</button>
+    </form>
+</mat-card>
