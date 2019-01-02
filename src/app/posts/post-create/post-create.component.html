@@ -1,10 +1,10 @@
 <mat-card>
     <form (submit) = onSendClick(postForm) #postForm = "ngForm">
         <mat-form-field>
-            <input matInput type="text" name="title" required="true" ngModel>
+            <input matInput type="text" name="title" required="true" ngModel placeholder="Post Title">
         </mat-form-field>
         <mat-form-field>
-            <textarea matInput rows="4" name="content" required="true" ngModel></textarea>
+            <textarea matInput rows="4" name="content" required="true" ngModel placeholder="Post Content"></textarea>
         </mat-form-field>
         <button mat-raised-button color="accent" type="submit">Send</button>
     </form>

@@ -14,6 +14,8 @@ import {
   MatToolbarModule,
   MatExpansionModule
 } from '@angular/material'
+import { PostService } from './posts/post.service';
+import { HttpClientModule } from '@angular/common/http';
 @NgModule({
   declarations: [
     AppComponent,
@@ -30,9 +32,10 @@ import {
     MatCardModule,
     MatButtonModule,
     MatToolbarModule,
-    MatExpansionModule
+    MatExpansionModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [PostService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
