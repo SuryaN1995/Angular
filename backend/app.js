@@ -1,11 +1,14 @@
 const express = require('express')
 const process = require('process')
-const mongoose = require('./mongoose')
 var body_parser = require('body-parser')
 const app = express()
 const { PostDB } = require('./PostSchema')
 
 app.use(body_parser.json())
+
+process.on('unhandledRejection',(reason,promise)=>{
+    console.log('Unhandled Rejection at:', reason.stack || reason)
+})
 
 app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*")
@@ -14,15 +17,16 @@ app.use((req, res, next) => {
     next()
 })
 
-app.get('/posts', (req, res) => {
-    PostDB.find().then((document) => {
+app.get('/posts', async (req, res) => {
+    try {
+        let post = await PostDB.find()
         res.status(200).json({
             message: 'Posts fetched succesfully',
-            posts: document
+            posts: post
         })
-    }).catch((error) => {
+    } catch (error) {
         res.status(400).send(error)
-    })
+    }
 })
 
 app.delete('/posts:id', (req, res) => {
@@ -32,8 +36,26 @@ app.delete('/posts:id', (req, res) => {
         res.status(200).json({
             message: "Post successfully deleted"
         })
-    }).catch((error)=>{
+    }).catch((error) => {
         res.status(400).send(error)
+    })
+})
+
+app.patch('/posts:id', (req, res) => {
+    console.log('getData')
+    const post = new PostDB({
+        _id: req.body.id,
+        title: req.body.title,
+        content: req.body.content
+    })
+    console.log('getData',post)
+    PostDB.updateOne({ _id: req.params.id }, post).then((result) => {
+        console.log(result)
+        res.status(200).json({
+            message: "Post updated succesfully"
+        })
+    }).catch((error) => {
+        res.status(400).send(error.message)
     })
 })
 
@@ -47,7 +69,7 @@ app.post('/posts', (req, res) => {
         console.log('posted', post)
         res.status(201).json({
             message: 'Post added succesfully',
-            postId:result._id
+            postId: result._id
         })
     })
 })

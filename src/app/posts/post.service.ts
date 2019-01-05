@@ -29,6 +29,18 @@ export class PostService {
         return this.postUpdated.asObservable()
     }
 
+    getPost(postId:String){
+        return {...this.posts.find(p=> p.id === postId)}
+    }
+
+    updatePost(id:String, title:String,content:String ){
+        const post : Post = {id:id,title:title,content:content}
+        this.httpClient.patch('http://localhost:3000/posts' + id,post)
+        .subscribe((response)=>{
+                console.log(response)
+        })
+    }
+
     deletePost(postId: String) {
         this.httpClient.delete('http://localhost:3000/posts' + postId)
             .subscribe(() => {
