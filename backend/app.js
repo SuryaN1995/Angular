@@ -6,7 +6,7 @@ const { PostDB } = require('./PostSchema')
 
 app.use(body_parser.json())
 
-process.on('unhandledRejection',(reason,promise)=>{
+process.on('unhandledRejection', (reason, promise) => {
     console.log('Unhandled Rejection at:', reason.stack || reason)
 })
 
@@ -29,49 +29,56 @@ app.get('/posts', async (req, res) => {
     }
 })
 
-app.delete('/posts:id', (req, res) => {
-    console.log(req.params.id)
-    PostDB.deleteOne({ _id: req.params.id }).then((result) => {
+app.delete('/posts:id', async (req, res) => {
+
+    try {
+        console.log(req.params.id)
+        var result = await PostDB.deleteOne({ _id: req.params.id })
         console.log(result)
         res.status(200).json({
             message: "Post successfully deleted"
         })
-    }).catch((error) => {
+    } catch (error) {
         res.status(400).send(error)
-    })
+    }
+
 })
 
-app.patch('/posts:id', (req, res) => {
-    console.log('getData')
-    const post = new PostDB({
-        _id: req.body.id,
-        title: req.body.title,
-        content: req.body.content
-    })
-    console.log('getData',post)
-    PostDB.updateOne({ _id: req.params.id }, post).then((result) => {
+app.patch('/posts:id', async (req, res) => {
+    try {
+        console.log('getData')
+        const post = new PostDB({
+            _id: req.body.id,
+            title: req.body.title,
+            content: req.body.content
+        })
+        console.log('getData', post)
+        let result = await PostDB.updateOne({ _id: req.params.id }, post)
         console.log(result)
         res.status(200).json({
             message: "Post updated succesfully"
         })
-    }).catch((error) => {
+    } catch (error) {
         res.status(400).send(error.message)
-    })
+    }
 })
 
 
-app.post('/posts', (req, res) => {
-    const post = PostDB({
-        title: req.body.title,
-        content: req.body.content
-    })
-    post.save().then((result) => {
+app.post('/posts', async (req, res) => {
+    try {
+        const post = PostDB({
+            title: req.body.title,
+            content: req.body.content
+        })
+        let result = await post.save()
         console.log('posted', post)
         res.status(201).json({
             message: 'Post added succesfully',
             postId: result._id
         })
-    })
+    } catch (error) {
+        res.status(400).send(erro)
+    }
 })
 
 
